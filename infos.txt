@@ -1,0 +1,74 @@
+arr1 |ahmed|khaled|mim|
+arr2 |cia  |pr    |rh |
+
+cout << arr1[0] : << arr2[0]; => ahmed  : cia
+..
+
+map: key value
+map[key] = value | key is the index and the key could be string int char , any type ..
+cout << map1[khaled]; => pr
+propertie of map:
+1- always sorted by key, default criteria is <
+2- unique keys
+3- fast insertion and removal of elements in the conatiner -> o(log n) -> o(1)
+4- fast search o(log n)
+5- random access support[]
+6- key cannot be modified
+map <int, string> m = {{1234, "ali"}, {1245, "mohamed"}, {1561, "khaled"}};
+map has a pair meaning it has first and second (it.first | it.second)
+for (auto it : it)
+    cout << it.first << "|" << it.second << endl;
+output :
+        1234 | ali
+        1245 | mohamed
+        1561 | khaled
+ps: map support random access : map1[9561] = "fifi"; (way to add an element into map)
+iterator : 
+map <int, string>::iterator it = m.begin(); 
+cout << it->first << " - " << it->second; (-> instead of . because iterator is like a pointer)
+
+for(; it != m.end(); it++){
+    cout << it->first << " - " << it->second << endl;
+}
+output: ascending 
+1234 - ali
+9561 - fifi
+1561 - khaled
+1245 - mohamed
+map <int, string>::iterator it = m.rbegin(); it now points on the last element from right to left
+for(; it != m.rend(); it++){
+    cout << it->first << " - " << it->second << endl;
+}
+output: descending 
+1245 - mohamed
+1561 - khaled
+9561 - fifi
+1234 - ali
+if we want to make an override on some elemet : m[1234] = "emad"; it will take the new value emad 
+m.count(1234) => checks for the key 1234 if it exist inside the map it will return 1 else 0
+to add an element with a function => m.insert(key, value);
+example:
+map<char, int> m = {{'a', 10}, {'b', 20}, {'c', 30}};
+m.insert(pair<char, int>('s', 40)); we need to make the compiler understand that we wanna add a pair of elements
+way 2 to add an element:
+auto it = m.begin();
+m.insert(it, {'f', 40}); the iterator makes the insertion faster 
+m.insert(it, {'g', 50}); is not a best practice if u wanna add a second pair to the map 
+the best practice :
+auto it = m.begin();
+it = m.insert(it, {'f', 40}); now the it will stay on the position where we add the last element
+m.insert(it, {'g', 50}); and pass it to this again (to prevent it from start from the begining 
+ = > thus slower insertion)
+to add a range of elements to a map : 
+map<char, int>m2;
+m2.insert(m.begin, m.find('f')); will add to m2 the elements from the first to the elemmt that has 'f' in it's key
+another way to add : 
+m.emplace('s', 60); we don't need to mention to the compiler that we need to add a pair if we used emplace
+m.emplace_hint(it, 's', 60); takes the iterator
+to remove an element: erase
+m.erase('a');
+
+
+
+
+
