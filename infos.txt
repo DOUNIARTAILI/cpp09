@@ -69,6 +69,21 @@ to remove an element: erase
 m.erase('a');
 
 
+Reverse Polish Notation :
+operands: any variable, number or letter
+operators: + - * / x^2 
+infix: 2+3
+prefix: +23 == add(2, 3) : polish notation
+postfix: 23+ : reverse polish notation
+assembly: it should get a into a register,b and then puts the result in another register this is ab+ a postfix notation
+LDR R1 a
+LDR R2 b
+ADD R1, R2, R3
+ 
+
+
+
+
 
 
 

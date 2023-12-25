@@ -6,7 +6,7 @@
 /*   By: drtaili <drtaili@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/22 22:31:06 by drtaili           #+#    #+#             */
-/*   Updated: 2023/12/23 02:50:04 by drtaili          ###   ########.fr       */
+/*   Updated: 2023/12/24 12:03:04 by drtaili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int main(int ac, char **av){
     if (ac == 2){
-        BitcoinExchange bitcoina;
+        BitcoinExchange bitcoina; 
         // bitcoina.displayExchangeRates();
         std::ifstream file(av[1]);
         if (!file.is_open()) {
@@ -40,12 +40,15 @@ int main(int ac, char **av){
                         if (res)
                             std::cout << date << " => "<< exchangeRate << " = " << std::fixed <<std::setprecision(1) << res * exchangeRate << std::endl;
                         else
-                            std::cout << "Error: cannot retrieve exchange rate for this date : "<< date << std::endl;
+                            std::cout << "Error: cannot retrieve exchange rate for this date => "<< date << std::endl;
                     }
                 }
                 else{
                     std::cout << "Error: bad input => "<< date << std::endl;
                 }
+            }
+            else{
+                std::cout << "Error: bad input => "<< date << std::endl;
             }
         }
         file.close();
@@ -71,3 +74,4 @@ int main(int ac, char **av){
 //         std::cout << day << std::endl;
 //     }
 // }
+
