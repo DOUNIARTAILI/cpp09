@@ -6,7 +6,7 @@
 /*   By: drtaili <drtaili@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 09:12:09 by drtaili           #+#    #+#             */
-/*   Updated: 2023/12/25 12:01:41 by drtaili          ###   ########.fr       */
+/*   Updated: 2023/12/25 13:28:13 by drtaili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@ public:
     RPN();
     RPN(std::string rpn);
     ~RPN();
-    // RPN(const RPN& other);
-    // const RPN& operator=(const RPN& other);
+    RPN(const RPN& other);
+    const RPN& operator=(const RPN& other);
     void calculatingRpn(std::string rpn);
     void fillVec(std::string rpn);
     void displayVec();

@@ -6,7 +6,7 @@
 /*   By: drtaili <drtaili@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 09:16:18 by drtaili           #+#    #+#             */
-/*   Updated: 2023/12/25 13:10:17 by drtaili          ###   ########.fr       */
+/*   Updated: 2023/12/25 13:30:44 by drtaili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,18 +19,24 @@ RPN::RPN(std::string rpn){
     fillVec(rpn);
     if (checker() == 1)
         calculatingRpn(rpn);
-    else
+    else{
         std::cout << "Error" << std::endl;
+    }
 }
 RPN::~RPN(){
     
 }
-// RPN::RPN(const RPN& other){
-    
-// }
-// const RPN& RPN::operator=(const RPN& other){
-    
-// }
+RPN::RPN(const RPN& other){
+    vec = other.vec;
+    mystack = other.mystack;
+}
+const RPN& RPN::operator=(const RPN& other){
+    if (this != &other) {
+        vec = other.vec;
+        mystack = other.mystack;
+    }
+    return *this;
+}
 
 
 void RPN::fillVec(std::string rpn){
@@ -51,47 +57,30 @@ void RPN::displayVec(){
     std::cout << "\n";
 }
 
-void RPN::calculatingRpn(std::string rpn) {
-    std::stack<int> mystack;
+void RPN::calculatingRpn(std::string rpn){
     std::string::iterator it = rpn.begin();
-    // std::string::iterator pos = rpn.begin();
-
-    for (; it != rpn.end(); it++) {
-        if (*it >= '0' && *it <= '9') {
-            // Convert the character digit to an integer and push onto the stack
+    for (; it != rpn.end(); it++){
+        if (*it >= '0' && *it <= '9'){
             mystack.push(*it - '0');
-
-        } else if (*it == '*' || *it == '-' || *it == '+' || *it == '/') {
-            // Save the position of the last operator
-            // pos = it;
-            // Perform the operation based on the operator
+        } 
+        else if (*it == '*' || *it == '-' || *it == '+' || *it == '/'){
             int operand2 = mystack.top();
             mystack.pop();
             int operand1 = mystack.top();
             mystack.pop();
-            // std::cout << "operand2 " << operand2 << " operand1 " << operand1 << std::endl;
-            if (*it == '*') {
+            if (*it == '*')
                 mystack.push(operand1 * operand2);
-            } else if (*it == '-') {
+            else if (*it == '-')
                 mystack.push(operand1 - operand2);
-            } else if (*it == '+') {
+            else if (*it == '+')
                 mystack.push(operand1 + operand2);
-            }
-            else if (*it == '/') {
+            else if (*it == '/')
                 mystack.push(operand1 / operand2);
-            }
         }
     }
-
-    // At this point, mystack should contain the final result
-    if (!mystack.empty()) {
+    if (!mystack.empty())
         std::cout << mystack.top() << std::endl;
-        // mystack.pop();
-        // std::cout << mystack.top() << std::endl;
-        // std::cout << "size = "<< mystack.size() << std::endl;
-    }
-    else {
-        // Handle error (empty stack)
+    else{
         std::cout << "Error" << std::endl;
     }
 }
@@ -105,8 +94,6 @@ int RPN::checker(){
     }
     return 1;
 }
-
-// "12*2/2*24-+"
 
 void RPN::displayStack(){
     while (!mystack.empty()) {
