@@ -21,13 +21,15 @@ int main(int ac, char **av){
             std::cerr << "Error: could not open file." << av[1] << std::endl;
             return 0;
         }
+        std::string dummyLine;
+        std::getline(file, dummyLine);
         std::string line;
         while (std::getline(file, line)) {
             std::istringstream iss(line);
             std::string date;
             float exchangeRate;
 
-            if (std::getline(iss, date, ',') && (iss >> exchangeRate)) {
+            if (std::getline(iss, date, '|') && (iss >> exchangeRate)) {
                 // std::cout << "date: "<< date<< std::endl;
                 // std::cout << "exchangeRate: "<< exchangeRate<< std::endl;
                 if (bitcoina.Date_checker(date) == 1){
@@ -37,10 +39,7 @@ int main(int ac, char **av){
                         std::cout << "Error: too large number." << std::endl;
                     else if (bitcoina.ExchangeRate_checker(exchangeRate) == 1){
                         float res = bitcoina.searchOnExchangeRate(date);
-                        if (res)
-                            std::cout << date << " => "<< exchangeRate << " = " << std::fixed <<std::setprecision(1) << res * exchangeRate << std::endl;
-                        else
-                            std::cout << "Error: cannot retrieve exchange rate for this date => "<< date << std::endl;
+                        std::cout << date << " => "<< exchangeRate << " = " << std::fixed <<std::setprecision(1) << res * exchangeRate << std::endl;
                     }
                 }
                 else{

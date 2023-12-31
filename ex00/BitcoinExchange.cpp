@@ -90,13 +90,33 @@ int BitcoinExchange::Date_checker(std::string key){
     return 0;
 }//Error: bad input => 2001-42-42 std::cout << "Error: bad input => "<< key << std::endl;
 
-float BitcoinExchange::searchOnExchangeRate(std::string date){
+// float BitcoinExchange::searchOnExchangeRate(std::string date){
    
+//     std::map<std::string, float>::iterator it = mapi.find(date);
+//     if (it != mapi.end()){
+//         std::cout << "it->first " << it->first << std::endl;
+//         std::cout << "it->second " << it->second << std::endl;
+//         return it->second;
+//     }
+//     return 0;
+// }
+
+float BitcoinExchange::searchOnExchangeRate(std::string date){
     std::map<std::string, float>::iterator it = mapi.find(date);
     if (it != mapi.end()){
         return it->second;
     }
-    return 0;
+    else{
+        it = mapi.begin();
+        if (date < it->first)
+            return 0.0;
+        for(; it != mapi.end(); it++){
+            if (it->first > date){
+                return (--it)->second;
+            }
+        }
+    }
+    return (--mapi.end())->second;
 }
 
 int BitcoinExchange::ExchangeRate_checker(float value){
