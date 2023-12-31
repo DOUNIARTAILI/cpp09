@@ -120,6 +120,7 @@ float BitcoinExchange::searchOnExchangeRate(std::string date){
 }
 
 int BitcoinExchange::ExchangeRate_checker(float value){
+    // std::cout << "value " << value << std::endl;
     if (value < 0)
         return -1; //Error: not a positive number.
     if (value > 1000)
@@ -131,3 +132,57 @@ void BitcoinExchange::output(){
     
 }
 
+// void BitcoinExchange::find_str(string s, string del) {
+//     // Use find function to find 1st position of delimiter.
+//     int end = s.find(del); 
+//     if (end != -1) {
+//         date = s.substr(0, end) << endl;
+//         s.erase(s.begin(), s.begin() + end + 1);
+//         value = s.substr(0, end);
+//     }
+// }
+
+
+int BitcoinExchange::all_digits(std::string str){
+    // std::cout << "value|"<< str << "|"<< std::endl;
+    size_t i = 0;
+    while (i < str.length()){
+        if (std::isdigit(str[i]) == 0)
+            return 0;
+        i++;
+    }
+    return 1;
+}
+
+int BitcoinExchange::valid_value(std::string value){
+    size_t i = 0;
+    int dotCount = 0;
+
+    while (i < value.length()){
+        if (value[i] == '.') {
+            dotCount++;
+            if (dotCount > 1) {
+                return 0;
+            }
+        } else if (!std::isdigit(value[i])) {
+            return 0;
+        }
+        i++;
+    }
+    return 1;
+}
+
+int BitcoinExchange::valid_date(std::string key){
+    
+    if (key.size() != 10)
+        return 0;
+    // std::cout << "key.size() "<< key.size() << std::endl;
+    // std::cout << "date|"<< key << "|"<< std::endl;
+    std::string YYYY = key.substr(0, 4);
+    std::string MM = key.substr(5, 2);
+    std::string DD = key.substr(8, 2);
+    // std::cout << "yyyy "<< YYYY << "MM "<< MM << "dd " << DD << std::endl;
+    if (all_digits(YYYY) && all_digits(MM) && all_digits(DD) && (key[4] == '-' && key[7] == '-'))
+        return 1;
+    return 0;
+}

@@ -31,6 +31,10 @@ public:
     int Date_checker(std::string key);
     int ExchangeRate_checker(float value);
     float searchOnExchangeRate(std::string date);
+    // void find_str(string s, string del);
+    int all_digits(std::string str);
+    int valid_date(std::string key);
+    int valid_value(std::string value);
     void output();
 private:
     std::map<std::string, float> mapi;
