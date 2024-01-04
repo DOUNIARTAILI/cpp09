@@ -1,64 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   PmergeMe.cpp                                       :+:      :+:    :+:   */
+/*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: drtaili <drtaili@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/03 18:42:35 by drtaili           #+#    #+#             */
-/*   Updated: 2024/01/04 22:36:56 by drtaili          ###   ########.fr       */
+/*   Created: 2024/01/03 18:44:08 by drtaili           #+#    #+#             */
+/*   Updated: 2024/01/04 18:59:03 by drtaili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "PmergeMe.hpp"
 
-PmergeMe::PmergeMe(){
-    
-}
-PmergeMe::~PmergeMe(){
-    
-}
-PmergeMe::PmergeMe(std::vector<int> vec){
-    std::vector<int>::iterator it;
-    for(it = vec.begin(); it != vec.end(); it++){
-        this->elements.push_back(*it);
-    }
-}
-// Function to group elements into pairs and sort them
-std::vector<std::pair<int, int> > PmergeMe::groupAndSortPairs() {
-    std::vector<std::pair<int, int> > pairs;
-    for (size_t i = 0; i < elements.size(); i += 2) {
-        if (i + 1 < elements.size()) {
-            // If there are two elements, make a pair such that first is less than second
-            if (elements[i] > elements[i + 1]) {
-                pairs.push_back(std::make_pair(elements[i], elements[i + 1]));
-            } else {
-                pairs.push_back(std::make_pair(elements[i + 1], elements[i]));
-            }
-        } else {
-            // If there is an odd element, make a pair with itself
-            odd = elements[i];
-            // pairs.push_back(std::make_pair(elements[i], elements[i]));
-        }
-    }
-    std::sort(pairs.begin(), pairs.end());
-    return pairs;
-}
-
-void PmergeMe::displaySortedPairs(const std::vector<std::pair<int, int> >& sortedPairs) {
+void displaySortedPairs(const std::vector<std::pair<int, int> >& sortedPairs) {
     std::cout << "Sorted Pairs:\n";
     for (std::vector<std::pair<int, int> >::const_iterator it = sortedPairs.begin(); it != sortedPairs.end(); ++it) {
         std::cout << "(" << it->first << ", " << it->second << ")";
     }
 }
 
-int PmergeMe::jacobsthal(int n) {
+// Function to calculate Jacobsthal numbers
+int jacobsthal(int n) {
     if (n == 0) return 0;
     if (n == 1) return 1;
     return jacobsthal(n - 1) + 2 * jacobsthal(n - 2);
 }
 
-std::vector<int> PmergeMe::jacob_numbers(const std::vector<int>& pend) {
+// Function to generate order of insertion based on Jacobsthal numbers
+std::vector<int> jacob_numbers(const std::vector<int>& pend) {
     std::vector<int> jacobNumbers;
     for (size_t i = 0; i < pend.size(); ++i) {
         int order = jacobsthal(static_cast<int>(i));
@@ -67,7 +36,7 @@ std::vector<int> PmergeMe::jacob_numbers(const std::vector<int>& pend) {
     return jacobNumbers;
 }
 
-std::vector<int> PmergeMe::generateInsertionOrder(std::vector<int>& pend, std::vector<int>& jacobNumbers) {
+std::vector<int> generateInsertionOrder(std::vector<int>& pend, std::vector<int>& jacobNumbers) {
     std::vector<int> combination;
     std::vector<int>::iterator it;
     std::vector<int>::iterator itb;
@@ -88,7 +57,7 @@ std::vector<int> PmergeMe::generateInsertionOrder(std::vector<int>& pend, std::v
     return combination;
 }
 
-int PmergeMe::findInsertPosition(const std::vector<int>& mainChain, int value) {
+int findInsertPosition(const std::vector<int>& mainChain, int value) {
     int low = 0;
     int high = mainChain.size() - 1;
     int mid;
@@ -103,10 +72,10 @@ int PmergeMe::findInsertPosition(const std::vector<int>& mainChain, int value) {
             high = mid - 1;
         }
     }
-    return low;
+    return low; // The position to insert the value to maintain sorted order
 }
 
-std::vector<std::pair<int, int> > PmergeMe::indexing(std::vector<int>& pend, std::vector<int>& insertionOrder) {
+std::vector<std::pair<int, int> > indexing(std::vector<int>& pend, std::vector<int>& insertionOrder) {
     std::vector<std::pair<int, int> > indexed;
     std::vector<int>::iterator it = insertionOrder.begin();
     int i = 1;
@@ -119,7 +88,7 @@ std::vector<std::pair<int, int> > PmergeMe::indexing(std::vector<int>& pend, std
     return indexed;
 }
 
-int PmergeMe::findElementByIndex(std::vector<std::pair<int, int> > indexed, int index){
+int findElementByIndex(std::vector<std::pair<int, int> > indexed, int index){
     for (size_t i = 0; i < indexed.size(); ++i) {
         if (indexed[i].second == index) {
             return indexed[i].first;
@@ -127,8 +96,8 @@ int PmergeMe::findElementByIndex(std::vector<std::pair<int, int> > indexed, int 
     }
     return 0;
 }
-
-void PmergeMe::insertPendIntoMain(std::vector<int>& mainChain, std::vector<int>& pend, std::vector<int>& insertionOrder) {
+// Function to insert elements from pend into main chain
+void insertPendIntoMain(std::vector<int>& mainChain, std::vector<int>& pend, std::vector<int>& insertionOrder) {
     std::vector<std::pair<int, int> > indexed = indexing(pend, insertionOrder);
     size_t i = 1;
     int element;
@@ -138,26 +107,59 @@ void PmergeMe::insertPendIntoMain(std::vector<int>& mainChain, std::vector<int>&
         int position = findInsertPosition(mainChain, element);
         mainChain.insert(mainChain.begin() + position, element);
     }
-    int position = findInsertPosition(mainChain, odd);
-    mainChain.insert(mainChain.begin() + position, odd);
 }
 
-void PmergeMe::merge_insert_algo(){
-    std::vector<std::pair<int, int> > sortedPairs = groupAndSortPairs();
+int main() {
+    PmergeMe p;
+    p.fill_vec();
+    std::vector<std::pair<int, int> > sortedPairs = p.groupAndSortPairs();
+    displaySortedPairs(sortedPairs);
+    // Step 2: Determine the larger of the two elements in each pair
     std::vector<int> main_chain;
     std::vector<int> pend;
     for (size_t i = 0; i < sortedPairs.size(); ++i) {
+        // Assuming the second element of the pair is the larger one, since pairs are sorted
         main_chain.push_back(sortedPairs[i].first);
         pend.push_back(sortedPairs[i].second);
     }
+    std::cout << std::endl;
+    // Output the main_chain
+    std::cout << "main_chain : " << std::endl;
+    for (size_t i = 0; i < main_chain.size(); ++i) {
+        std::cout << main_chain[i] << " ";
+    }
+    std::cout << std::endl;
+    // Output the pend
+    std::cout << "pend : " << std::endl;
+    for (size_t i = 0; i < pend.size(); ++i) {
+        std::cout << pend[i] << " ";
+    }
+    std::cout << std::endl;
+    // main_chain.insert(main_chain.begin(), pend[0]);
+    // pend.erase(pend.begin());
     std::vector<int> jacobNumbers = jacob_numbers(pend);
+    // Output jacobNumbers
+    std::cout << "jacobNumbers: " << std::endl;
+    for (size_t i = 0; i < jacobNumbers.size(); ++i) {
+        std::cout << jacobNumbers[i] << " ";
+    }
+    std::cout << std::endl;
+    // Generate the order of insertion based on Jacobsthal numbers
     std::vector<int> insertionOrder = generateInsertionOrder(pend, jacobNumbers);
+
+    // Output the insertion order
+    std::cout << "Insertion Order: " << std::endl;
+    for (size_t i = 0; i < insertionOrder.size(); ++i) {
+        std::cout << insertionOrder[i] << " ";
+    }
+    std::cout << std::endl;
     insertPendIntoMain(main_chain, pend, insertionOrder);
+    // std::vector<std::pair<int, int> > idx = indexing(pend, insertionOrder);
+    // displaySortedPairs(idx);
     std::cout << "result : " << std::endl;
     for (size_t i = 0; i < main_chain.size(); ++i) {
         std::cout << main_chain[i] << " ";
     }
 }
 
-// $> ./PmergeMe `shuf -i 1-100000 -n 3000 | tr "\n" " "`
-// $> ./PmergeMe `jot -r 3000 1 100000 | tr '\n' ' '`
+// `jot -r 3000 1 100000 | tr '\n' ' '`
