@@ -6,7 +6,7 @@
 /*   By: drtaili <drtaili@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 18:44:08 by drtaili           #+#    #+#             */
-/*   Updated: 2024/01/04 00:22:21 by drtaili          ###   ########.fr       */
+/*   Updated: 2024/01/04 01:31:20 by drtaili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,12 +43,12 @@ std::vector<int> generateInsertionOrder(std::vector<int>& pend, std::vector<int>
     it = std::find(jacobNumbers.begin(), jacobNumbers.end(), 3);
     itb = it--;
     if (it != jacobNumbers.end()){
-        int size = pend.size();
         for (; itb != jacobNumbers.end(); itb++){
             combination.push_back(*itb);
-            for (int i = 2; i < size; i++) {
-                if (i < *itb && i > *it){
-                    combination.push_back(i);
+            for (int i = *itb - 1; i > *it; i--) {
+                combination.push_back(i);
+                if (combination.size() == pend.size()) {
+                    return combination;
                 }
             }
             it++;
@@ -56,6 +56,39 @@ std::vector<int> generateInsertionOrder(std::vector<int>& pend, std::vector<int>
     }
     return combination;
 }
+
+// int findInsertPosition(const std::vector<int>& mainChain, int value) {
+//     int low = 0;
+//     int high = mainChain.size() - 1;
+//     int mid;
+
+//     while (low <= high) {
+//         mid = low + (high - low) / 2;
+//         if (mainChain[mid] == value) {
+//             return mid;
+//         } else if (mainChain[mid] < value) {
+//             high = mid - 1;
+//         } else {
+//             low = mid + 1;
+//         }
+//     }
+//     return low; // The position to insert the value to maintain sorted order
+// }
+
+// // Function to insert elements from pend into main chain
+// void insertPendIntoMain(std::vector<int>& mainChain, std::vector<int>& pend) {
+//     for (size_t i = 0; i < pend.size(); ++i) {
+//         int position = findInsertPosition(mainChain, pend[i]);
+//         mainChain.insert(mainChain.begin() + position, pend[i]);
+//     }
+// }
+
+// void insertPendIntoMain(std::vector<int>& mainChain, std::vector<int>& pend) {
+//     for (size_t i = 0; i < pend.size(); ++i) {
+//         int position = findInsertPosition(mainChain, pend[i]);
+//         mainChain.insert(mainChain.begin() + position, pend[i]);
+//     }
+// }
 
 int main() {
     PmergeMe p;

@@ -6,7 +6,7 @@
 /*   By: drtaili <drtaili@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 18:42:35 by drtaili           #+#    #+#             */
-/*   Updated: 2024/01/04 00:17:55 by drtaili          ###   ########.fr       */
+/*   Updated: 2024/01/04 01:32:13 by drtaili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,14 @@ void PmergeMe::fill_vec(){
     elements.push_back(100);
     elements.push_back(11);
     elements.push_back(46);
+    elements.push_back(29);
+    elements.push_back(83);
     elements.push_back(2);
     elements.push_back(53);
+    elements.push_back(65);
+    elements.push_back(85);
+    elements.push_back(55);
+    elements.push_back(63);
     elements.push_back(0);
 }
 
