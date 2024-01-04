@@ -6,7 +6,7 @@
 /*   By: drtaili <drtaili@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 18:44:08 by drtaili           #+#    #+#             */
-/*   Updated: 2024/01/04 01:31:20 by drtaili          ###   ########.fr       */
+/*   Updated: 2024/01/04 18:21:57 by drtaili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,25 +57,26 @@ std::vector<int> generateInsertionOrder(std::vector<int>& pend, std::vector<int>
     return combination;
 }
 
-// int findInsertPosition(const std::vector<int>& mainChain, int value) {
-//     int low = 0;
-//     int high = mainChain.size() - 1;
-//     int mid;
+int findInsertPosition(const std::vector<int>& mainChain, int value) {
+    int low = 0;
+    int high = mainChain.size() - 1;
+    int mid;
 
-//     while (low <= high) {
-//         mid = low + (high - low) / 2;
-//         if (mainChain[mid] == value) {
-//             return mid;
-//         } else if (mainChain[mid] < value) {
-//             high = mid - 1;
-//         } else {
-//             low = mid + 1;
-//         }
-//     }
-//     return low; // The position to insert the value to maintain sorted order
-// }
+    while (low <= high) {
+        mid = low + (high - low) / 2;
+        if (mainChain[mid] == value) {
+            return mid;
+        } else if (mainChain[mid] < value) {
+            low = mid + 1;
+        } else {
+            high = mid - 1;
+        }
+    }
+    return low; // The position to insert the value to maintain sorted order
+}
 
-// // Function to insert elements from pend into main chain
+
+// Function to insert elements from pend into main chain
 // void insertPendIntoMain(std::vector<int>& mainChain, std::vector<int>& pend) {
 //     for (size_t i = 0; i < pend.size(); ++i) {
 //         int position = findInsertPosition(mainChain, pend[i]);
@@ -83,12 +84,39 @@ std::vector<int> generateInsertionOrder(std::vector<int>& pend, std::vector<int>
 //     }
 // }
 
-// void insertPendIntoMain(std::vector<int>& mainChain, std::vector<int>& pend) {
-//     for (size_t i = 0; i < pend.size(); ++i) {
-//         int position = findInsertPosition(mainChain, pend[i]);
-//         mainChain.insert(mainChain.begin() + position, pend[i]);
-//     }
-// }
+std::vector<std::pair<int, int> > indexing(std::vector<int>& pend, std::vector<int>& insertionOrder) {
+    std::vector<std::pair<int, int> > indexed;
+    std::vector<int>::iterator it = insertionOrder.begin();
+    int i = 1;
+    indexed.push_back(std::make_pair(pend[0], 1));
+    for (; it != insertionOrder.end(); it++) {
+        indexed.push_back(std::make_pair(pend[i], *it));
+        i++;
+    }
+    indexed.push_back(std::make_pair(pend[i], pend.size()));
+    return indexed;
+}
+
+int findElementByIndex(std::vector<std::pair<int, int> > indexed, int index){
+    for (size_t i = 0; i < indexed.size(); ++i) {
+        if (indexed[i].second == index) {
+            return indexed[i].first;
+        }
+    }
+    return 0;
+}
+// Function to insert elements from pend into main chain
+void insertPendIntoMain(std::vector<int>& mainChain, std::vector<int>& pend, std::vector<int>& insertionOrder) {
+    std::vector<std::pair<int, int> > indexed = indexing(pend, insertionOrder);
+    size_t i = 1;
+    int element;
+    mainChain.insert(mainChain.begin(), findElementByIndex(indexed, 1));
+    for (i = 2; i <= pend.size(); i++){
+        element = findElementByIndex(indexed, i);
+        int position = findInsertPosition(mainChain, element);
+        mainChain.insert(mainChain.begin() + position, element);
+    }
+}
 
 int main() {
     PmergeMe p;
@@ -100,8 +128,8 @@ int main() {
     std::vector<int> pend;
     for (size_t i = 0; i < sortedPairs.size(); ++i) {
         // Assuming the second element of the pair is the larger one, since pairs are sorted
-        pend.push_back(sortedPairs[i].first);
-        main_chain.push_back(sortedPairs[i].second);
+        main_chain.push_back(sortedPairs[i].first);
+        pend.push_back(sortedPairs[i].second);
     }
     std::cout << std::endl;
     // Output the main_chain
@@ -134,4 +162,11 @@ int main() {
         std::cout << insertionOrder[i] << " ";
     }
     std::cout << std::endl;
+    insertPendIntoMain(main_chain, pend, insertionOrder);
+    // std::vector<std::pair<int, int> > idx = indexing(pend, insertionOrder);
+    // displaySortedPairs(idx);
+    std::cout << "result : " << std::endl;
+    for (size_t i = 0; i < main_chain.size(); ++i) {
+        std::cout << main_chain[i] << " ";
+    }
 }

@@ -6,7 +6,7 @@
 /*   By: drtaili <drtaili@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 18:42:35 by drtaili           #+#    #+#             */
-/*   Updated: 2024/01/04 01:32:13 by drtaili          ###   ########.fr       */
+/*   Updated: 2024/01/04 18:22:24 by drtaili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ std::vector<std::pair<int, int> > PmergeMe::groupAndSortPairs() {
     for (size_t i = 0; i < elements.size(); i += 2) {
         if (i + 1 < elements.size()) {
             // If there are two elements, make a pair such that first is less than second
-            if (elements[i] < elements[i + 1]) {
+            if (elements[i] > elements[i + 1]) {
                 pairs.push_back(std::make_pair(elements[i], elements[i + 1]));
             } else {
                 pairs.push_back(std::make_pair(elements[i + 1], elements[i]));
@@ -28,25 +28,20 @@ std::vector<std::pair<int, int> > PmergeMe::groupAndSortPairs() {
             pairs.push_back(std::make_pair(elements[i], elements[i]));
         }
     }
+    std::sort(pairs.begin(), pairs.end());
     return pairs;
 }
 
 
 void PmergeMe::fill_vec(){
-    elements.push_back(9);
+    elements.push_back(7);
     elements.push_back(8);
-    elements.push_back(29);
+    elements.push_back(27);
     elements.push_back(100);
     elements.push_back(11);
     elements.push_back(46);
-    elements.push_back(29);
-    elements.push_back(83);
     elements.push_back(2);
     elements.push_back(53);
-    elements.push_back(65);
-    elements.push_back(85);
-    elements.push_back(55);
-    elements.push_back(63);
     elements.push_back(0);
 }
 
