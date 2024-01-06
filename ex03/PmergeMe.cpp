@@ -6,7 +6,7 @@
 /*   By: drtaili <drtaili@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 18:42:35 by drtaili           #+#    #+#             */
-/*   Updated: 2024/01/04 22:37:31 by drtaili          ###   ########.fr       */
+/*   Updated: 2024/01/04 22:44:20 by drtaili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,15 +63,3 @@ void PmergeMe::display_vec(){
 //     Container elements;
 //     std::vector<int> elements;
 // };
-
-        std::list<int> lst;
-
-        void showlist(std::list<int> g)
-{
-    std::list<int>::iterator it;
-    for (it = g.begin(); it != g.end(); ++it)
-        std::cout << *it << " ";
-    std::cout << '\n';
-}
-
-            lst.push_back(std::atoi(av[i]));
