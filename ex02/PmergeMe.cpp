@@ -6,7 +6,7 @@
 /*   By: drtaili <drtaili@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 18:42:35 by drtaili           #+#    #+#             */
-/*   Updated: 2024/01/06 19:55:02 by drtaili          ###   ########.fr       */
+/*   Updated: 2024/01/06 22:43:30 by drtaili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,6 +138,26 @@ std::vector<int> PmergeMe::generateInsertionOrder(std::vector<int>& pend, std::v
     }
     return combination;
 }
+std::list<int> PmergeMe::generateInsertionOrder_lst(std::list<int>& pend, std::list<int>& jacobNumbers) {
+    std::list<int> combination;
+    std::list<int>::iterator it;
+    std::list<int>::iterator itb;
+    it = std::find(jacobNumbers.begin(), jacobNumbers.end(), 3);
+    itb = it--;
+    if (it != jacobNumbers.end()){
+        for (; itb != jacobNumbers.end(); itb++){
+            combination.push_back(*itb);
+            for (int i = *itb - 1; i > *it; i--) {
+                combination.push_back(i);
+                if (combination.size() == pend.size()) {
+                    return combination;
+                }
+            }
+            it++;
+        }
+    }
+    return combination;
+}
 
 int PmergeMe::findInsertPosition(const std::vector<int>& mainChain, int value) {
     int low = 0;
@@ -157,6 +177,34 @@ int PmergeMe::findInsertPosition(const std::vector<int>& mainChain, int value) {
     return low;
 }
 
+int PmergeMe::findInsertPosition_lst(const std::list<int>& mainChain, int value) {
+    std::list<int>::const_iterator low = mainChain.begin();
+    std::list<int>::const_iterator high = mainChain.end();
+
+    int index = 0;
+
+    while (low != high) {
+        std::list<int>::const_iterator mid = low;
+        int distance = 0;
+        while (mid != high && distance < (high == mainChain.end() ? 0 : 1)) {
+            ++mid;
+            ++distance;
+        }
+
+        if (*mid == value) {
+            return index + distance;
+        } else if (*mid < value) {
+            low = mid;
+            index += distance;
+        } else {
+            high = mid;
+        }
+    }
+
+    return index;
+}
+
+
 std::vector<std::pair<int, int> > PmergeMe::indexing(std::vector<int>& pend, std::vector<int>& insertionOrder) {
     std::vector<std::pair<int, int> > indexed;
     std::vector<int>::iterator it = pend.begin();
@@ -170,6 +218,20 @@ std::vector<std::pair<int, int> > PmergeMe::indexing(std::vector<int>& pend, std
     return indexed;
 }
 
+std::list<std::pair<int, int> > PmergeMe::indexing_lst(std::list<int>& pend, std::list<int>& insertionOrder) {
+    std::list<std::pair<int, int> > indexed;
+    std::list<int>::iterator it = pend.begin();
+    std::list<int>::iterator its = insertionOrder.begin();
+
+    indexed.push_back(std::make_pair(*it, 1));
+    it++;
+    for (; it != pend.end(); it++) {
+        indexed.push_back(std::make_pair(*it, *its));
+        its++;
+    }
+    return indexed;
+}
+
 int PmergeMe::findElementByIndex(std::vector<std::pair<int, int> > indexed, int index){
     for (size_t i = 0; i < indexed.size(); ++i) {
         if (indexed[i].second == index) {
@@ -179,7 +241,18 @@ int PmergeMe::findElementByIndex(std::vector<std::pair<int, int> > indexed, int 
     return 0;
 }
 
+int PmergeMe::findElementByIndex_lst(std::list<std::pair<int, int> > indexed, int index){
+    std::list<std::pair<int, int> >::iterator it;
+    for (it = indexed.begin(); it != indexed.end(); it++) {
+        if (it->second == index) {
+            return it->first;
+        }
+    }
+    return 0;
+}
+
 void PmergeMe::insertPendIntoMain(std::vector<int>& mainChain, std::vector<int>& pend, std::vector<int>& insertionOrder) {
+    (void)mainChain;
     std::vector<std::pair<int, int> > indexed = indexing(pend, insertionOrder);
     displaySortedPairs(indexed);
     std::cout << "\n";
@@ -195,6 +268,34 @@ void PmergeMe::insertPendIntoMain(std::vector<int>& mainChain, std::vector<int>&
     if (odd != -1){
         int position = findInsertPosition(mainChain, odd);
         mainChain.insert(mainChain.begin() + position, odd);
+    }
+}
+
+void PmergeMe::insertPendIntoMain_lst(std::list<int>& mainChain, std::list<int>& pend, std::list<int>& insertionOrder) {
+    std::list<std::pair<int, int> > indexed = indexing_lst(pend, insertionOrder);
+    displaySortedPairs_lst(indexed);
+    std::cout << "\n";
+    std::list<int>::iterator it;
+
+    mainChain.insert(mainChain.begin(), findElementByIndex_lst(indexed, 1));
+    for (it = insertionOrder.begin(); it != insertionOrder.end(); it++){
+        int element = findElementByIndex_lst(indexed, *it);
+        std::cout << "insertionOrder it : " << *it << std::endl;
+        std::cout << "element : " << element << std::endl;
+        int position = findInsertPosition_lst(mainChain, element);
+        std::list<int>::iterator positionIt = mainChain.begin();
+        while (positionIt != mainChain.end() && *positionIt < position) {
+            ++positionIt;
+        }
+        mainChain.insert(positionIt, element);
+    }
+    if (odd != -1){
+        int position = findInsertPosition_lst(mainChain, odd);
+        std::list<int>::iterator positionIt = mainChain.begin();
+        while (positionIt != mainChain.end() && *positionIt < position) {
+            ++positionIt;
+        }
+        mainChain.insert(positionIt, odd);
     }
 }
 
@@ -293,13 +394,21 @@ void PmergeMe::merge_insert_algo(){
         std::cout << *itj << " ";
     }
     std::cout << "\n";
-    // std::vector<int> insertionOrder = generateInsertionOrder(pend, jacobNumbers);
-    // std::cout << "insertionOrder : " << std::endl;
-    // for (size_t i = 0; i < insertionOrder.size(); ++i) {
-    //     std::cout << insertionOrder[i] << " ";
-    // }
-    // std::cout << "\n";
-    // insertPendIntoMain(main_chain, pend, insertionOrder);
+    std::vector<int> insertionOrder = generateInsertionOrder(pend, jacobNumbers);
+    std::list<int> insertionOrder_lst = generateInsertionOrder_lst(pendl, jacobNumbers_lst);
+    std::cout << "insertionOrder : " << std::endl;
+    for (size_t i = 0; i < insertionOrder.size(); ++i) {
+        std::cout << insertionOrder[i] << " ";
+    }
+    std::cout << "\n";
+    std::list<int>::iterator itg = insertionOrder_lst.begin();
+    std::cout << "insertionOrder_lst : " << std::endl;
+    for (; itg != insertionOrder_lst.end(); itg++) {
+        std::cout << *itg << " ";
+    }
+    std::cout << "\n";
+    insertPendIntoMain(main_chain, pend, insertionOrder);
+    insertPendIntoMain_lst(main_chainl, pendl, insertionOrder_lst);
     // std::cout << "result : " << std::endl;
     // for (size_t i = 0; i < main_chain.size(); ++i) {
     //     std::cout << main_chain[i] << " ";
