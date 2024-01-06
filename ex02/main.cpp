@@ -6,7 +6,7 @@
 /*   By: drtaili <drtaili@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 18:44:08 by drtaili           #+#    #+#             */
-/*   Updated: 2024/01/04 22:39:54 by drtaili          ###   ########.fr       */
+/*   Updated: 2024/01/06 19:08:55 by drtaili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,17 @@ int main(int ac, char **av) {
         // std::cout << "elements : " << std::endl;
         // showlist(lst);
         PmergeMe p(vec);
+        // clock_t start_time = clock();
         p.merge_insert_algo();
+        // clock_t end_time = clock();
+        // double elapsed_time = static_cast<double>(end_time - start_time) / CLOCKS_PER_SEC;
+        // // Print the elapsed time
+        // std::cout << "Elapsed time: " << elapsed_time << " seconds" << std::endl;
+
     }
     else
         std::cout << "Error" << std::endl;
+    return 0;
 }
 
 

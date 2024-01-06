@@ -6,7 +6,7 @@
 /*   By: drtaili <drtaili@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 09:12:09 by drtaili           #+#    #+#             */
-/*   Updated: 2023/12/25 13:28:13 by drtaili          ###   ########.fr       */
+/*   Updated: 2024/01/06 17:55:51 by drtaili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,11 @@ public:
     ~RPN();
     RPN(const RPN& other);
     const RPN& operator=(const RPN& other);
+    std::string New_Rpn(std::string rpn);
+    int checker(std::string rpn);
     void calculatingRpn(std::string rpn);
-    void fillVec(std::string rpn);
-    void displayVec();
-    void displayStack();
-    int checker();
 private:
     std::stack<int>  mystack;
-    std::vector<char>  vec;
 };
 
 #endif

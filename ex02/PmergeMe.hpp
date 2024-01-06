@@ -6,7 +6,7 @@
 /*   By: drtaili <drtaili@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 18:42:05 by drtaili           #+#    #+#             */
-/*   Updated: 2024/01/06 00:47:45 by drtaili          ###   ########.fr       */
+/*   Updated: 2024/01/06 19:31:44 by drtaili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include <list>
 #include <utility> // for std::pair
 #include <algorithm>
+#include <ctime>
 
 // template <typename Container>
 class PmergeMe{
@@ -23,18 +24,21 @@ public:
     PmergeMe(std::vector<int> vec);
     ~PmergeMe();
     std::vector<std::pair<int, int> > groupAndSortPairs();
+    std::list<std::pair<int, int> > groupAndSortPairs_lst();
     void displaySortedPairs(const std::vector<std::pair<int, int> >& sortedPairs);
+    void displaySortedPairs_lst(const std::list<std::pair<int, int> >& sortedPairs_lst);
     void insertPendIntoMain(std::vector<int>& mainChain, std::vector<int>& pend, std::vector<int>& insertionOrder);
     std::vector<std::pair<int, int> > indexing(std::vector<int>& pend, std::vector<int>& insertionOrder);
     int findInsertPosition(const std::vector<int>& mainChain, int value);
-    int jacobsthal(int n);
-    // std::vector<int> jacob_numbers(const std::vector<int>& pend);
     std::vector<int> jacob_numbers(int n);
+    std::list<int> jacob_numbers_lst(int n);
     int findElementByIndex(std::vector<std::pair<int, int> > indexed, int index);
     std::vector<int> generateInsertionOrder(std::vector<int>& pend, std::vector<int>& jacobNumbers);
     void merge_insert_algo();
+    void merge_insert_algo_lst();
 private:
     std::vector<int> elements;
+    std::list<int> lst;
     int odd;
 };
 

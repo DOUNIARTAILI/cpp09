@@ -6,7 +6,7 @@
 /*   By: drtaili <drtaili@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 18:42:35 by drtaili           #+#    #+#             */
-/*   Updated: 2024/01/06 01:34:25 by drtaili          ###   ########.fr       */
+/*   Updated: 2024/01/06 19:55:02 by drtaili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,11 @@ PmergeMe::~PmergeMe(){
     
 }
 PmergeMe::PmergeMe(std::vector<int> vec): odd(-1){
+    
     std::vector<int>::iterator it;
     for(it = vec.begin(); it != vec.end(); it++){
         this->elements.push_back(*it);
+        this->lst.push_back(*it);
     }
 }
 // Function to group elements into pairs and sort them
@@ -38,10 +40,39 @@ std::vector<std::pair<int, int> > PmergeMe::groupAndSortPairs() {
         } else {
             // If there is an odd element, make a pair with itself
             odd = elements[i];
-            // pairs.push_back(std::make_pair(elements[i], elements[i]));
         }
     }
     std::sort(pairs.begin(), pairs.end());
+    return pairs;
+}
+
+std::list<std::pair<int, int> > PmergeMe::groupAndSortPairs_lst() {
+    std::list<std::pair<int, int> > pairs;
+
+    std::list<int>::iterator it = lst.begin();
+
+    while (it != lst.end()) {
+        // Check if there are at least two lst remaining
+        if (++it != lst.end()) {
+            int first = *(--it);
+            ++it;
+            int second = *it;
+            ++it;
+
+            // Make a pair such that the first element is less than the second
+            if (first > second) {
+                pairs.push_back(std::make_pair(first, second));
+            } else {
+                pairs.push_back(std::make_pair(second, first));
+            }
+        } 
+        else {
+            std::list<int>::iterator ity = lst.end();
+            ity--;
+            odd = *ity;
+        }
+    }
+    pairs.sort();
     return pairs;
 }
 
@@ -52,20 +83,12 @@ void PmergeMe::displaySortedPairs(const std::vector<std::pair<int, int> >& sorte
     }
 }
 
-// int PmergeMe::jacobsthal(int n) {
-//     if (n == 0) return 0;
-//     if (n == 1) return 1;
-//     return jacobsthal(n - 1) + 2 * jacobsthal(n - 2);
-// }
-
-// std::vector<int> PmergeMe::jacob_numbers(const std::vector<int>& pend) {
-//     std::vector<int> jacobNumbers;
-//     for (size_t i = 0; i < pend.size(); ++i) {
-//         int order = jacobsthal(static_cast<int>(i));
-//         jacobNumbers.push_back(order);
-//     }
-//     return jacobNumbers;
-// }
+void PmergeMe::displaySortedPairs_lst(const std::list<std::pair<int, int> >& sortedPairs_lst){
+    std::cout << "Sorted Pairs:\n";
+    for (std::list<std::pair<int, int> >::const_iterator it = sortedPairs_lst.begin(); it != sortedPairs_lst.end(); ++it) {
+        std::cout << "(" << it->first << ", " << it->second << ")";
+    }
+}
 
 std::vector<int> PmergeMe::jacob_numbers(int n){
     std::vector<int> dp(n);
@@ -76,6 +99,21 @@ std::vector<int> PmergeMe::jacob_numbers(int n){
 
     for (int i = 2; i <= n; i++)
         dp[i] = dp[i - 1] + 2 * dp[i - 2];
+
+    return dp;
+}
+
+std::list<int> PmergeMe::jacob_numbers_lst(int n) {
+    std::list<int> dp;
+
+    // base case
+    dp.push_back(0);
+    dp.push_back(1);
+
+    for (int i = 2; i < n; i++) {
+        int value = dp.back() + 2 * *std::prev(dp.end(), 2);
+        dp.push_back(value);
+    }
 
     return dp;
 }
@@ -119,22 +157,8 @@ int PmergeMe::findInsertPosition(const std::vector<int>& mainChain, int value) {
     return low;
 }
 
-// std::vector<std::pair<int, int> > PmergeMe::indexing(std::vector<int>& pend, std::vector<int>& insertionOrder) {
-//     std::vector<std::pair<int, int> > indexed;
-//     std::vector<int>::iterator it = insertionOrder.begin();
-//     int i = 1;
-//     indexed.push_back(std::make_pair(pend[0], 1));
-//     for (; it != insertionOrder.end(); it++) {
-//         indexed.push_back(std::make_pair(pend[i], *it));
-//         i++;
-//     }
-//     indexed.push_back(std::make_pair(pend[i], pend.size()));
-//     return indexed;
-// }
-
 std::vector<std::pair<int, int> > PmergeMe::indexing(std::vector<int>& pend, std::vector<int>& insertionOrder) {
     std::vector<std::pair<int, int> > indexed;
-    // std::vector<int>::iterator it = insertionOrder.begin();
     std::vector<int>::iterator it = pend.begin();
     int i = 0;
     indexed.push_back(std::make_pair(pend[0], 1));
@@ -143,7 +167,6 @@ std::vector<std::pair<int, int> > PmergeMe::indexing(std::vector<int>& pend, std
         indexed.push_back(std::make_pair(*it, insertionOrder[i]));
         i++;
     }
-    // indexed.push_back(std::make_pair(*it, pend.size()));
     return indexed;
 }
 
@@ -156,30 +179,11 @@ int PmergeMe::findElementByIndex(std::vector<std::pair<int, int> > indexed, int 
     return 0;
 }
 
-// void PmergeMe::insertPendIntoMain(std::vector<int>& mainChain, std::vector<int>& pend, std::vector<int>& insertionOrder) {
-//     std::vector<std::pair<int, int> > indexed = indexing(pend, insertionOrder);
-//     displaySortedPairs(indexed);
-//     std::cout << "\n";
-//     // size_t i = 1;
-//     // int element;
-//     mainChain.insert(mainChain.begin(), findElementByIndex(indexed, 1));
-//     for (size_t i = 2; i <= pend.size(); i++){
-//         int element = findElementByIndex(indexed, i);
-//         int position = findInsertPosition(mainChain, element);
-//         mainChain.insert(mainChain.begin() + position, element);
-//     }
-//     if (odd != -1){
-//         int position = findInsertPosition(mainChain, odd);
-//         mainChain.insert(mainChain.begin() + position, odd);
-//     }
-// }
-
 void PmergeMe::insertPendIntoMain(std::vector<int>& mainChain, std::vector<int>& pend, std::vector<int>& insertionOrder) {
     std::vector<std::pair<int, int> > indexed = indexing(pend, insertionOrder);
     displaySortedPairs(indexed);
     std::cout << "\n";
-    // size_t j = 0;
-    // int element;
+
     mainChain.insert(mainChain.begin(), findElementByIndex(indexed, 1));
     for (size_t i = 0; i < insertionOrder.size() - 1; i++){
         int element = findElementByIndex(indexed, insertionOrder[i]);
@@ -194,9 +198,51 @@ void PmergeMe::insertPendIntoMain(std::vector<int>& mainChain, std::vector<int>&
     }
 }
 
+// void PmergeMe::merge_insert_algo(){
+//     std::vector<std::pair<int, int> > sortedPairs = groupAndSortPairs();
+//     displaySortedPairs(sortedPairs);
+//     std::cout << "\n";
+//     std::vector<int> main_chain;
+//     std::vector<int> pend;
+//     for (size_t i = 0; i < sortedPairs.size(); ++i) {
+//         main_chain.push_back(sortedPairs[i].first);
+//         pend.push_back(sortedPairs[i].second);
+//     }
+//     std::cout << "main_chain : " << std::endl;
+//     for (size_t i = 0; i < main_chain.size(); ++i) {
+//         std::cout << main_chain[i] << " ";
+//     }
+//     std::cout << "\n";
+//     std::cout << "pend : " << std::endl;
+//     for (size_t i = 0; i < pend.size(); ++i) {
+//         std::cout << pend[i] << " ";
+//     }
+//     std::cout << "\n";
+//     std::vector<int> jacobNumbers = jacob_numbers(pend.size()-1);
+//     std::cout << "jacobNumbers : " << std::endl;
+//     for (size_t i = 0; i < jacobNumbers.size(); ++i) {
+//         std::cout << jacobNumbers[i] << " ";
+//     }
+//     std::cout << "\n";
+//     std::vector<int> insertionOrder = generateInsertionOrder(pend, jacobNumbers);
+//     std::cout << "insertionOrder : " << std::endl;
+//     for (size_t i = 0; i < insertionOrder.size(); ++i) {
+//         std::cout << insertionOrder[i] << " ";
+//     }
+//     std::cout << "\n";
+//     insertPendIntoMain(main_chain, pend, insertionOrder);
+//     std::cout << "result : " << std::endl;
+//     for (size_t i = 0; i < main_chain.size(); ++i) {
+//         std::cout << main_chain[i] << " ";
+//     }
+// }
+
 void PmergeMe::merge_insert_algo(){
     std::vector<std::pair<int, int> > sortedPairs = groupAndSortPairs();
+    std::list<std::pair<int, int> > sortedPairs_lst = groupAndSortPairs_lst();
     displaySortedPairs(sortedPairs);
+    std::cout << "\n";
+    displaySortedPairs_lst(sortedPairs_lst);
     std::cout << "\n";
     std::vector<int> main_chain;
     std::vector<int> pend;
@@ -204,9 +250,22 @@ void PmergeMe::merge_insert_algo(){
         main_chain.push_back(sortedPairs[i].first);
         pend.push_back(sortedPairs[i].second);
     }
+    std::list<std::pair<int, int> >::iterator it = sortedPairs_lst.begin();
+    std::list<int> main_chainl;
+    std::list<int> pendl;
+    for (; it != sortedPairs_lst.end(); it++) {
+        main_chainl.push_back(it->first);
+        pendl.push_back(it->second);
+    }
     std::cout << "main_chain : " << std::endl;
     for (size_t i = 0; i < main_chain.size(); ++i) {
         std::cout << main_chain[i] << " ";
+    }
+    std::cout << "\n";
+    std::list<int>::iterator itl = main_chainl.begin();
+    std::cout << "main_chainl : " << std::endl;
+    for (; itl != main_chainl.end(); itl++) {
+        std::cout << *itl << " ";
     }
     std::cout << "\n";
     std::cout << "pend : " << std::endl;
@@ -214,23 +273,37 @@ void PmergeMe::merge_insert_algo(){
         std::cout << pend[i] << " ";
     }
     std::cout << "\n";
-    std::vector<int> jacobNumbers = jacob_numbers(pend.size()-1);
+    std::list<int>::iterator itp = pendl.begin();
+    std::cout << "pendl : " << std::endl;
+    for (; itp != pendl.end(); itp++) {
+        std::cout << *itp << " ";
+    }
+    std::cout << "\n";
+    std::vector<int> jacobNumbers = jacob_numbers(pend.size());
     std::cout << "jacobNumbers : " << std::endl;
     for (size_t i = 0; i < jacobNumbers.size(); ++i) {
         std::cout << jacobNumbers[i] << " ";
     }
     std::cout << "\n";
-    std::vector<int> insertionOrder = generateInsertionOrder(pend, jacobNumbers);
-    std::cout << "insertionOrder : " << std::endl;
-    for (size_t i = 0; i < insertionOrder.size(); ++i) {
-        std::cout << insertionOrder[i] << " ";
+    std::list<int> jacobNumbers_lst = jacob_numbers_lst(pendl.size());
+    std::list<int>::iterator itj;
+    std::cout << "jacobNumbers_lst size : "<< jacobNumbers_lst.size() << std::endl;
+    std::cout << "jacobNumbers_lst : " << std::endl;
+    for (itj = jacobNumbers_lst.begin() ; itj != jacobNumbers_lst.end(); itj++) {
+        std::cout << *itj << " ";
     }
     std::cout << "\n";
-    insertPendIntoMain(main_chain, pend, insertionOrder);
-    std::cout << "result : " << std::endl;
-    for (size_t i = 0; i < main_chain.size(); ++i) {
-        std::cout << main_chain[i] << " ";
-    }
+    // std::vector<int> insertionOrder = generateInsertionOrder(pend, jacobNumbers);
+    // std::cout << "insertionOrder : " << std::endl;
+    // for (size_t i = 0; i < insertionOrder.size(); ++i) {
+    //     std::cout << insertionOrder[i] << " ";
+    // }
+    // std::cout << "\n";
+    // insertPendIntoMain(main_chain, pend, insertionOrder);
+    // std::cout << "result : " << std::endl;
+    // for (size_t i = 0; i < main_chain.size(); ++i) {
+    //     std::cout << main_chain[i] << " ";
+    // }
 }
 
 // $> ./PmergeMe `shuf -i 1-100000 -n 3000 | tr "\n" " "`
